@@ -217,6 +217,7 @@ var NguiAutoCompleteComponent = (function () {
         this.loadingText = "Loading";
         this.loadingTemplate = null;
         this.closeToBottom = null;
+        this.hightToBottom = 100;
         this.showInputTag = true;
         this.showDropdownOnInit = false;
         this.tabToSelect = true;
@@ -460,6 +461,10 @@ var NguiAutoCompleteComponent = (function () {
         __metadata("design:type", Object)
     ], NguiAutoCompleteComponent.prototype, "closeToBottom", void 0);
     __decorate([
+        core_1.Input("hight-to-bottom"),
+        __metadata("design:type", Object)
+    ], NguiAutoCompleteComponent.prototype, "hightToBottom", void 0);
+    __decorate([
         core_1.Input("max-num-list"),
         __metadata("design:type", Number)
     ], NguiAutoCompleteComponent.prototype, "maxNumList", void 0);
@@ -564,6 +569,7 @@ var NguiAutoCompleteDirective = (function () {
         this.autocomplete = false;
         this.acceptUserInput = true;
         this.loadingTemplate = null;
+        this.hightToBottom = 100;
         this.loadingText = "Loading";
         this.tabToSelect = true;
         this.selectOnBlur = false;
@@ -590,6 +596,7 @@ var NguiAutoCompleteDirective = (function () {
             component.keyword = _this.inputEl.value;
             component.showInputTag = false; //Do NOT display autocomplete input tag separately
             component.closeToBottom = _this.isCloseToBottom();
+            component.hightToBottom = _this.hightToBottom;
             component.pathToData = _this.pathToData;
             component.minChars = _this.minChars;
             component.source = _this.source;
@@ -643,7 +650,7 @@ var NguiAutoCompleteDirective = (function () {
         };
         this.isCloseToBottom = function () {
             var thisInputElBCR = _this.inputEl.getBoundingClientRect();
-            return thisInputElBCR.bottom + 100 > window.innerHeight;
+            return thisInputElBCR.bottom + _this.hightToBottom > window.innerHeight;
         };
         this.styleAutoCompleteDropdown = function () {
             if (_this.componentRef) {
@@ -889,6 +896,10 @@ var NguiAutoCompleteDirective = (function () {
         core_1.Input("list-formatter"),
         __metadata("design:type", Object)
     ], NguiAutoCompleteDirective.prototype, "listFormatter", void 0);
+    __decorate([
+        core_1.Input("hight-to-bottom"),
+        __metadata("design:type", Object)
+    ], NguiAutoCompleteDirective.prototype, "hightToBottom", void 0);
     __decorate([
         core_1.Input("loading-text"),
         __metadata("design:type", String)

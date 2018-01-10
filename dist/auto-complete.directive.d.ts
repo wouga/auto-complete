@@ -19,6 +19,7 @@ export declare class NguiAutoCompleteDirective implements OnInit, OnChanges {
     selectValueOf: string;
     loadingTemplate: any;
     listFormatter: any;
+    hightToBottom: number;
     loadingText: string;
     blankOptionText: string;
     noMatchFoundText: string;

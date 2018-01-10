@@ -23,6 +23,7 @@ export declare class NguiAutoCompleteComponent implements OnInit {
     loadingText: string;
     loadingTemplate: any;
     closeToBottom: any;
+    hightToBottom: number;
     maxNumList: number;
     showInputTag: boolean;
     showDropdownOnInit: boolean;

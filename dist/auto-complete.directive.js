@@ -15,6 +15,7 @@ var NguiAutoCompleteDirective = (function () {
         this.autocomplete = false;
         this.acceptUserInput = true;
         this.loadingTemplate = null;
+        this.hightToBottom = 100;
         this.loadingText = "Loading";
         this.tabToSelect = true;
         this.selectOnBlur = false;
@@ -41,6 +42,7 @@ var NguiAutoCompleteDirective = (function () {
             component.keyword = _this.inputEl.value;
             component.showInputTag = false; //Do NOT display autocomplete input tag separately
             component.closeToBottom = _this.isCloseToBottom();
+            component.hightToBottom = _this.hightToBottom;
             component.pathToData = _this.pathToData;
             component.minChars = _this.minChars;
             component.source = _this.source;
@@ -94,7 +96,7 @@ var NguiAutoCompleteDirective = (function () {
         };
         this.isCloseToBottom = function () {
             var thisInputElBCR = _this.inputEl.getBoundingClientRect();
-            return thisInputElBCR.bottom + 100 > window.innerHeight;
+            return thisInputElBCR.bottom + _this.hightToBottom > window.innerHeight;
         };
         this.styleAutoCompleteDropdown = function () {
             if (_this.componentRef) {
@@ -319,6 +321,7 @@ var NguiAutoCompleteDirective = (function () {
         'selectValueOf': [{ type: core_1.Input, args: ["select-value-of",] },],
         'loadingTemplate': [{ type: core_1.Input, args: ["loading-template",] },],
         'listFormatter': [{ type: core_1.Input, args: ["list-formatter",] },],
+        'hightToBottom': [{ type: core_1.Input, args: ["hight-to-bottom",] },],
         'loadingText': [{ type: core_1.Input, args: ["loading-text",] },],
         'blankOptionText': [{ type: core_1.Input, args: ["blank-option-text",] },],
         'noMatchFoundText': [{ type: core_1.Input, args: ["no-match-found-text",] },],

@@ -24,6 +24,7 @@ var NguiAutoCompleteComponent = (function () {
         this.loadingText = "Loading";
         this.loadingTemplate = null;
         this.closeToBottom = null;
+        this.hightToBottom = 100;
         this.showInputTag = true;
         this.showDropdownOnInit = false;
         this.tabToSelect = true;
@@ -132,7 +133,6 @@ var NguiAutoCompleteComponent = (function () {
     };
     NguiAutoCompleteComponent.prototype.reloadList = function (keyword) {
         var _this = this;
-        console.log(this.closeToBottom);
         this.filteredList = [];
         if (keyword.length < (this.minChars || 0)) {
             this.minCharsEntered = false;
@@ -247,6 +247,7 @@ var NguiAutoCompleteComponent = (function () {
         'loadingText': [{ type: core_1.Input, args: ["loading-text",] },],
         'loadingTemplate': [{ type: core_1.Input, args: ["loading-template",] },],
         'closeToBottom': [{ type: core_1.Input, args: ["close-to-bottom",] },],
+        'hightToBottom': [{ type: core_1.Input, args: ["hight-to-bottom",] },],
         'maxNumList': [{ type: core_1.Input, args: ["max-num-list",] },],
         'showInputTag': [{ type: core_1.Input, args: ["show-input-tag",] },],
         'showDropdownOnInit': [{ type: core_1.Input, args: ["show-dropdown-on-init",] },],
