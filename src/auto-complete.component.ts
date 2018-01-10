@@ -1,5 +1,5 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from "@angular/core";
-import {NguiAutoComplete} from "./auto-complete";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { NguiAutoComplete } from "./auto-complete";
 
 /**
  * show a selected date in monthly calendar
@@ -57,7 +57,7 @@ import {NguiAutoComplete} from "./auto-complete";
   .ngui-auto-complete > input {
     outline: none;
     border: 0;
-    padding: 2px; 
+    padding: 2px;
     box-sizing: border-box;
     background-clip: content-box;
   }
@@ -112,6 +112,7 @@ export class NguiAutoCompleteComponent implements OnInit {
   @Input("accept-user-input") acceptUserInput: boolean = true;
   @Input("loading-text") loadingText: string = "Loading";
   @Input("loading-template") loadingTemplate = null;
+  @Input("close-to-bottom") closeToBottom = null;
   @Input("max-num-list") maxNumList: number;
   @Input("show-input-tag") showInputTag: boolean = true;
   @Input("show-dropdown-on-init") showDropdownOnInit: boolean = false;
@@ -165,12 +166,12 @@ export class NguiAutoCompleteComponent implements OnInit {
         this.autoCompleteInput.nativeElement.focus()
       }
       if (this.showDropdownOnInit) {
-        this.showDropdownList({target: {value: ''}});
+        this.showDropdownList({ target: { value: '' } });
       }
     });
   }
 
-  reloadListInDelay = (evt: any): void  => {
+  reloadListInDelay = (evt: any): void => {
     let delayMs = this.isSrcArr() ? 10 : 500;
     let keyword = evt.target.value;
 
@@ -189,12 +190,22 @@ export class NguiAutoCompleteComponent implements OnInit {
 
   findItemFromSelectValue(selectText: string): any {
     let matchingItems = this.filteredList
-                            .filter(item => ('' + item) === selectText);
+      .filter(item => ('' + item) === selectText);
     return matchingItems.length ? matchingItems[0] : null;
   }
 
-  reloadList(keyword: string): void {
+  selectFirstItem() {
+    if (this.autoSelectFirstItem) {
+      this.itemIndex = 0;
+      if (this.closeToBottom && this.filteredList && this.filteredList.length > 0) {
+        this.itemIndex = this.filteredList.length - 1;
+      }
+    }
+  }
 
+
+  reloadList(keyword: string): void {
+    console.log(this.closeToBottom);
     this.filteredList = [];
     if (keyword.length < (this.minChars || 0)) {
       this.minCharsEntered = false;
@@ -209,7 +220,7 @@ export class NguiAutoCompleteComponent implements OnInit {
       if (this.maxNumList) {
         this.filteredList = this.filteredList.slice(0, this.maxNumList);
       }
-
+      this.selectFirstItem();
     } else {                 // remote source
       this.isLoading = true;
 
@@ -227,6 +238,7 @@ export class NguiAutoCompleteComponent implements OnInit {
             if (this.maxNumList) {
               this.filteredList = this.filteredList.slice(0, this.maxNumList);
             }
+            this.selectFirstItem();
           },
           error => null,
           () => this.isLoading = false // complete
@@ -235,11 +247,12 @@ export class NguiAutoCompleteComponent implements OnInit {
         // remote source
 
         this.autoComplete.getRemoteData(keyword).subscribe(resp => {
-            this.filteredList = resp ? (<any>resp) : [];
-            if (this.maxNumList) {
-              this.filteredList = this.filteredList.slice(0, this.maxNumList);
-            }
-          },
+          this.filteredList = resp ? (<any>resp) : [];
+          if (this.maxNumList) {
+            this.filteredList = this.filteredList.slice(0, this.maxNumList);
+          }
+          this.selectFirstItem();
+        },
           error => null,
           () => this.isLoading = false // complete
         );

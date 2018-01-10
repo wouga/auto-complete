@@ -6,10 +6,10 @@ import {AppSvc} from "./app.service";
 
 let templateStr: string = `
   <h1> Autocomplete Directive Test - Local Source </h1>
-    
+
   <fieldset><legend><h2>Source as Array of Strings</h2></legend>
     <ngui-utils-1>
-      <div ngui-auto-complete 
+      <div ngui-auto-complete
         [source]="arrayOfStrings"
         [accept-user-input]="true"
         [auto-select-first-item]="false"
@@ -27,11 +27,11 @@ let templateStr: string = `
 
   <fieldset><legend><h2>Source as Array of Strings. Drop-down on focus disable</h2></legend>
     <ngui-utils-1>
-      <div ngui-auto-complete 
+      <div ngui-auto-complete
         [source]="arrayOfStrings"
         [accept-user-input]="true"
         [open-on-focus]="false"
-        [auto-select-first-item]="false"
+        [auto-select-first-item]="true"
         [select-on-blur]="true"
         (ngModelChange)="myCallback1($event)"
         (customSelected)="customCallback($event)"
@@ -43,30 +43,31 @@ let templateStr: string = `
     <pre>{{templateStr | htmlCode:'ngui-utils-1'}}</pre>
     <pre> arrayOfStrings: {{json(arrayOfStrings)}}</pre>
   </fieldset>
-    
+
   <fieldset><legend><h2>Source as Array of id/value</h2></legend>
     <ngui-utils-2>
-      <input 
+      <input
         id="model2"
         ngui-auto-complete
         blank-option-text="Select One"
         [(ngModel)]="model2"
-        [source]="arrayOfKeyValues" 
+        [source]="arrayOfKeyValues"
         placeholder="enter text"
-        z-index="4"/> 
+        z-index="4"/>
       <a href="javascript:void(0)" (click)="model2={id:'change', value: 'it'}">Change It</a>
       <br/>selected model2: {{model2 | json}}<br/><br/>
     </ngui-utils-2>
     <pre>{{templateStr | htmlCode:'ngui-utils-2'}}</pre>
     <pre>arrayOfKeyValues: {{json(arrayOfKeyValues)}}</pre>
   </fieldset>
-    
+
   <fieldset><legend><h2>Source as Array of Key/Name</h2></legend>
     <ngui-utils-3>
       <input ngui-auto-complete [source]="arrayOfKeyValues2"
         id="model3"
         [(ngModel)]="model3"
         placeholder="enter text"
+        [auto-select-first-item]="true"
         value-formatter="(key) name"
         list-formatter="(key) name"
         [match-formatted]="true" />
@@ -75,17 +76,18 @@ let templateStr: string = `
     <pre>{{templateStr | htmlCode:'ngui-utils-3'}}</pre>
     <pre>arrayOfKeyValues2: {{json(arrayOfKeyValues2)}}</pre>
   </fieldset>
-  
-      
+
+
   <fieldset><legend><h2>Source as HTTP URI String</h2></legend>
     <ngui-utils-4>
       <input ngui-auto-complete
         id="model4"
         [(ngModel)]="model4"
         placeholder="Enter Address(min. 2 chars)"
-        [source]="googleGeoCode" 
+        [source]="googleGeoCode"
         no-match-found-text="No Match Found"
         list-formatter="formatted_address"
+        [auto-select-first-item]="true"
         path-to-data="results"
         loading-text="Google Is Thinking..."
         [loading-template]="loadingTemplate"
@@ -96,17 +98,18 @@ let templateStr: string = `
     <pre>{{templateStr | htmlCode:'ngui-utils-4'}}</pre>
     <pre> source: {{googleGeoCode}}</pre>
   </fieldset>
- 
+
   <fieldset><legend><h2>Source as Observable "Marvel API"</h2></legend>
     <ngui-utils-5>
       <input ngui-auto-complete
         id="model5"
-        placeholder="Start typing a hero name (min. 2 chars) ... for example: Hulk"     
-        [(ngModel)]="model5" 
+        placeholder="Start typing a hero name (min. 2 chars) ... for example: Hulk"
+        [(ngModel)]="model5"
+        [auto-select-first-item]="true"
         [source]="appSvc.findHeroes"
         path-to-data="data.results"
         [list-formatter]="renderHero"
-        min-chars="2" 
+        min-chars="2"
       />
       <br/>selected model5: {{model5 | json}}<br/><br/>
     </ngui-utils-5>
@@ -114,7 +117,7 @@ let templateStr: string = `
     <b>appSvc.findHeroes functoin</b>
     <pre>{{appSvc.findHeroes | jsCode}}</pre>
   </fieldset>
-    
+
   <fieldset><legend><h2>With Material Design</h2></legend>
     <ngui-utils-6>
       <mat-input-container>
@@ -145,10 +148,10 @@ let templateStr: string = `
     <pre>{{templateStr | htmlCode:'ngui-utils-7'}}</pre>
     <pre> arrayOfStrings: {{json(arrayOfStrings)}}</pre>
   </fieldset>
-  
+
  <fieldset style="direction:rtl;text-align:right"><legend><h2>RTL support</h2></legend>
     <ngui-utils-8>
-      <div ngui-auto-complete 
+      <div ngui-auto-complete
         [source]="arrayOfStrings"
         [accept-user-input]="false"
         (ngModelChange)="myCallback8($event)"
@@ -227,7 +230,7 @@ export class DirectiveTestComponent {
 
   renderHero = (data: any) : SafeHtml => {
     let html = `<b style='float:left;width:100%'>${data.name}</b>
-                <img style="float: left;padding: 5px;" src="${data.thumbnail.path}/portrait_small.${data.thumbnail.extension}"> 
+                <img style="float: left;padding: 5px;" src="${data.thumbnail.path}/portrait_small.${data.thumbnail.extension}">
                 <span>${data.description}</span>`;
 
     return this._sanitizer.bypassSecurityTrustHtml(html);

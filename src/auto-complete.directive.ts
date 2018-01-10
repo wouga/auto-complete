@@ -1,20 +1,20 @@
 import {
-    ComponentFactoryResolver,
-    ComponentRef,
-    Directive,
-    EventEmitter,
-    Host,
-    Input,
-    OnChanges,
-    OnInit,
-    Optional,
-    Output,
-    SimpleChanges,
-    SkipSelf,
-    ViewContainerRef
+  ComponentFactoryResolver,
+  ComponentRef,
+  Directive,
+  EventEmitter,
+  Host,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional,
+  Output,
+  SimpleChanges,
+  SkipSelf,
+  ViewContainerRef
 } from "@angular/core";
-import {NguiAutoCompleteComponent} from "./auto-complete.component";
-import {AbstractControl, ControlContainer, FormControl, FormGroup, FormGroupName} from "@angular/forms";
+import { NguiAutoCompleteComponent } from "./auto-complete.component";
+import { AbstractControl, ControlContainer, FormControl, FormGroup, FormGroupName } from "@angular/forms";
 
 /**
  * display auto-complete section with input and dropdown list when it is clicked
@@ -73,8 +73,8 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
 
 
   constructor(private resolver: ComponentFactoryResolver,
-              public  viewContainerRef: ViewContainerRef,
-              @Optional() @Host() @SkipSelf() private parentForm: ControlContainer) {
+    public viewContainerRef: ViewContainerRef,
+    @Optional() @Host() @SkipSelf() private parentForm: ControlContainer) {
     this.el = this.viewContainerRef.element.nativeElement;
   }
 
@@ -123,23 +123,23 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
     // if this element is not an input tag, move dropdown after input tag
     // so that it displays correctly
     this.inputEl = this.el.tagName === "INPUT" ?
-        <HTMLInputElement>this.el : <HTMLInputElement>this.el.querySelector("input");
+      <HTMLInputElement>this.el : <HTMLInputElement>this.el.querySelector("input");
 
     if (this.openOnFocus) {
-        this.inputEl.addEventListener('focus', e => this.showAutoCompleteDropdown(e));
+      this.inputEl.addEventListener('focus', e => this.showAutoCompleteDropdown(e));
     }
 
     if (this.closeOnFocusOut) {
-        this.inputEl.addEventListener('focusout', e => this.hideAutoCompleteDropdown(e));
+      this.inputEl.addEventListener('focusout', e => this.hideAutoCompleteDropdown(e));
     }
 
     if (!this.autocomplete) {
       this.inputEl.setAttribute('autocomplete', 'off');
     }
     this.inputEl.addEventListener('blur', (e) => {
-        this.scheduledBlurHandler = () => {
-          return this.blurHandler(e);
-        };
+      this.scheduledBlurHandler = () => {
+        return this.blurHandler(e);
+      };
     });
     this.inputEl.addEventListener('keydown', e => this.keydownEventHandler(e));
     this.inputEl.addEventListener('input', e => this.inputEventHandler(e));
@@ -178,6 +178,7 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
     component.keyword = this.inputEl.value;
     component.showInputTag = false; //Do NOT display autocomplete input tag separately
 
+    component.closeToBottom = this.isCloseToBottom();
     component.pathToData = this.pathToData;
     component.minChars = this.minChars;
     component.source = this.source;
@@ -233,20 +234,25 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
       let currentItem: any;
       let hasRevertValue = (typeof this.revertValue !== "undefined");
       if (this.inputEl && hasRevertValue && this.acceptUserInput === false) {
-          currentItem = this.componentRef.instance.findItemFromSelectValue(this.inputEl.value);
+        currentItem = this.componentRef.instance.findItemFromSelectValue(this.inputEl.value);
       }
       this.componentRef.destroy();
       this.componentRef = undefined;
 
       if (this.inputEl && hasRevertValue && this.acceptUserInput === false && currentItem === null) {
-          this.selectNewValue(this.revertValue);
+        this.selectNewValue(this.revertValue);
       } else if (this.inputEl && this.acceptUserInput === true && typeof currentItem === "undefined" && event && event.target.value) {
-          this.enterNewText(event.target.value);
+        this.enterNewText(event.target.value);
       }
     }
     this.dropdownJustHidden = true;
     setTimeout(() => this.dropdownJustHidden = false, 100);
   };
+
+  isCloseToBottom = () => {
+    let thisInputElBCR = this.inputEl.getBoundingClientRect();
+    return thisInputElBCR.bottom + 100 > window.innerHeight;
+  }
 
   styleAutoCompleteDropdown = () => {
     if (this.componentRef) {
@@ -255,7 +261,7 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
       /* setting width/height auto complete */
       let thisElBCR = this.el.getBoundingClientRect();
       let thisInputElBCR = this.inputEl.getBoundingClientRect();
-      let closeToBottom = thisInputElBCR.bottom + 100 > window.innerHeight;
+      let closeToBottom = this.isCloseToBottom();
       let directionOfStyle = this.isRtl ? 'right' : 'left';
 
       this.acDropdownEl.style.width = thisInputElBCR.width + "px";
@@ -320,24 +326,24 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
     this.valueChanged.emit(val);
     this.hideAutoCompleteDropdown();
     setTimeout(() => {
-        if(this.reFocusAfterSelect){
-          this.inputEl.focus();
-        }
+      if (this.reFocusAfterSelect) {
+        this.inputEl.focus();
+      }
 
-        return this.inputEl;
+      return this.inputEl;
     });
   };
 
   selectCustomValue = (text: string) => {
     this.customSelected.emit(text);
     this.hideAutoCompleteDropdown();
-      setTimeout(() => {
-          if(this.reFocusAfterSelect){
-              this.inputEl.focus();
-          }
+    setTimeout(() => {
+      if (this.reFocusAfterSelect) {
+        this.inputEl.focus();
+      }
 
-          return this.inputEl;
-      });
+      return this.inputEl;
+    });
   };
 
   enterNewText = (value: any) => {

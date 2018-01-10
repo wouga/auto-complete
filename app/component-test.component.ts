@@ -5,12 +5,12 @@ var templateStr = `
   <fieldset><legend><h2>Component test - multi autocomplete</h2></legend>
     <ngui-utils-1>
       <div class="wrapper" (click)="showAutocomplete=true">
-      
+
         <li class="addr" *ngFor="let addr of addrs; let i = index;" >
           <span>{{addr.formatted_address}}</span>
           <span class="remove" (click)="removeFromAddrs($event, i)">x</span>
         </li>
-        
+
         <ngui-auto-complete
           *ngIf="showAutocomplete"
           (valueSelected)="addToAddrs($event)"
@@ -18,6 +18,7 @@ var templateStr = `
           [source]="googleGeoCode"
           display-property-name="formatted_address"
           [list-formatter]="myListFormatter"
+          [auto-select-first-item]="true"
           loading-text="Google Is Thinking..."
           [loading-template]="loadingTemplate"
           max-num-list="5"
@@ -30,13 +31,13 @@ var templateStr = `
     </ngui-utils-1>
     <pre>{{templateStr | htmlCode:'ngui-utils-1'}}</pre>
   </fieldset>
-  
+
   <fieldset>
     <ngui-utils-2>
       <input [(ngModel)]="myModel"
           (focus)="showMe=true"
           (blur)="showMe=false" />
-      <ngui-auto-complete 
+      <ngui-auto-complete
          *ngIf="showMe"
          [show-dropdown-on-init]="true"
          (valueSelected)="myModel = $event"
