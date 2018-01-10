@@ -35,6 +35,7 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
   @Input("select-value-of") selectValueOf: string;
   @Input("loading-template") loadingTemplate = null;
   @Input("list-formatter") listFormatter;
+  @Input("hight-to-bottom") hightToBottom = 100;
   @Input("loading-text") loadingText: string = "Loading";
   @Input("blank-option-text") blankOptionText: string;
   @Input("no-match-found-text") noMatchFoundText: string;
@@ -179,6 +180,7 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
     component.showInputTag = false; //Do NOT display autocomplete input tag separately
 
     component.closeToBottom = this.isCloseToBottom();
+    component.hightToBottom = this.hightToBottom;
     component.pathToData = this.pathToData;
     component.minChars = this.minChars;
     component.source = this.source;
@@ -251,7 +253,7 @@ export class NguiAutoCompleteDirective implements OnInit, OnChanges {
 
   isCloseToBottom = () => {
     let thisInputElBCR = this.inputEl.getBoundingClientRect();
-    return thisInputElBCR.bottom + 100 > window.innerHeight;
+    return thisInputElBCR.bottom + this.hightToBottom > window.innerHeight;
   }
 
   styleAutoCompleteDropdown = () => {

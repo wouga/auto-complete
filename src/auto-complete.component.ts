@@ -113,6 +113,7 @@ export class NguiAutoCompleteComponent implements OnInit {
   @Input("loading-text") loadingText: string = "Loading";
   @Input("loading-template") loadingTemplate = null;
   @Input("close-to-bottom") closeToBottom = null;
+  @Input("hight-to-bottom") hightToBottom = 100;
   @Input("max-num-list") maxNumList: number;
   @Input("show-input-tag") showInputTag: boolean = true;
   @Input("show-dropdown-on-init") showDropdownOnInit: boolean = false;
@@ -205,7 +206,6 @@ export class NguiAutoCompleteComponent implements OnInit {
 
 
   reloadList(keyword: string): void {
-    console.log(this.closeToBottom);
     this.filteredList = [];
     if (keyword.length < (this.minChars || 0)) {
       this.minCharsEntered = false;
