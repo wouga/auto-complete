@@ -22,6 +22,7 @@ export declare class NguiAutoCompleteComponent implements OnInit {
     acceptUserInput: boolean;
     loadingText: string;
     loadingTemplate: any;
+    closeToBottom: any;
     maxNumList: number;
     showInputTag: boolean;
     showDropdownOnInit: boolean;
@@ -54,6 +55,7 @@ export declare class NguiAutoCompleteComponent implements OnInit {
     showDropdownList(event: any): void;
     hideDropdownList(): void;
     findItemFromSelectValue(selectText: string): any;
+    selectFirstItem(): void;
     reloadList(keyword: string): void;
     selectOne(data: any): void;
     enterText(data: any): void;

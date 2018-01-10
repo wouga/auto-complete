@@ -23,6 +23,7 @@ var NguiAutoCompleteComponent = (function () {
         this.acceptUserInput = true;
         this.loadingText = "Loading";
         this.loadingTemplate = null;
+        this.closeToBottom = null;
         this.showInputTag = true;
         this.showDropdownOnInit = false;
         this.tabToSelect = true;
@@ -87,7 +88,7 @@ var NguiAutoCompleteComponent = (function () {
         this.el = elementRef.nativeElement;
     }
     NguiAutoCompleteComponent.prototype.isSrcArr = function () {
-        return (this.source.constructor.name === "Array");
+        return Array.isArray(this.source);
     };
     /**
      * user enters into input el, shows list to select, then select one
@@ -121,8 +122,17 @@ var NguiAutoCompleteComponent = (function () {
             .filter(function (item) { return ('' + item) === selectText; });
         return matchingItems.length ? matchingItems[0] : null;
     };
+    NguiAutoCompleteComponent.prototype.selectFirstItem = function () {
+        if (this.autoSelectFirstItem) {
+            this.itemIndex = 0;
+            if (this.closeToBottom && this.filteredList && this.filteredList.length > 0) {
+                this.itemIndex = this.filteredList.length - 1;
+            }
+        }
+    };
     NguiAutoCompleteComponent.prototype.reloadList = function (keyword) {
         var _this = this;
+        console.log(this.closeToBottom);
         this.filteredList = [];
         if (keyword.length < (this.minChars || 0)) {
             this.minCharsEntered = false;
@@ -137,6 +147,7 @@ var NguiAutoCompleteComponent = (function () {
             if (this.maxNumList) {
                 this.filteredList = this.filteredList.slice(0, this.maxNumList);
             }
+            this.selectFirstItem();
         }
         else {
             this.isLoading = true;
@@ -151,6 +162,7 @@ var NguiAutoCompleteComponent = (function () {
                     if (_this.maxNumList) {
                         _this.filteredList = _this.filteredList.slice(0, _this.maxNumList);
                     }
+                    _this.selectFirstItem();
                 }, function (error) { return null; }, function () { return _this.isLoading = false; } // complete
                 );
             }
@@ -161,6 +173,7 @@ var NguiAutoCompleteComponent = (function () {
                     if (_this.maxNumList) {
                         _this.filteredList = _this.filteredList.slice(0, _this.maxNumList);
                     }
+                    _this.selectFirstItem();
                 }, function (error) { return null; }, function () { return _this.isLoading = false; } // complete
                 );
             }
@@ -211,7 +224,7 @@ var NguiAutoCompleteComponent = (function () {
                     selector: "ngui-auto-complete",
                     template: "\n  <div #autoCompleteContainer class=\"ngui-auto-complete\">\n    <!-- keyword input -->\n    <input *ngIf=\"showInputTag\"\n           #autoCompleteInput class=\"keyword\"\n           [attr.autocomplete]=\"autocomplete ? 'null' : 'off'\"\n           placeholder=\"{{placeholder}}\"\n           (focus)=\"showDropdownList($event)\"\n           (blur)=\"blurHandler($event)\"\n           (keydown)=\"inputElKeyHandler($event)\"\n           (input)=\"reloadListInDelay($event)\"\n           [(ngModel)]=\"keyword\" />\n\n    <!-- dropdown that user can select -->\n    <ul *ngIf=\"dropdownVisible\" [class.empty]=\"emptyList\">\n      <li *ngIf=\"isLoading && loadingTemplate\" class=\"loading\" [innerHTML]=\"loadingTemplate\"></li>\n      <li *ngIf=\"isLoading && !loadingTemplate\" class=\"loading\">{{loadingText}}</li>\n      <li *ngIf=\"minCharsEntered && !isLoading && !filteredList.length\"\n           (mousedown)=\"selectOne('')\"\n           class=\"no-match-found\">{{noMatchFoundText || 'No Result Found'}}</li>\n      <li *ngIf=\"blankOptionText && filteredList.length\"\n          (mousedown)=\"selectOne('')\"\n          class=\"blank-item\">{{blankOptionText}}</li>\n      <li class=\"item\"\n          *ngFor=\"let item of filteredList; let i=index\"\n          (mousedown)=\"selectOne(item)\"\n          [ngClass]=\"{selected: i === itemIndex}\"\n          [innerHtml]=\"autoComplete.getFormattedListItem(item)\">\n      </li>\n    </ul>\n\n  </div>",
                     providers: [auto_complete_1.NguiAutoComplete],
-                    styles: ["\n  @keyframes slideDown {\n    0% {\n      transform:  translateY(-10px);\n    }\n    100% {\n      transform: translateY(0px);\n    }\n  }\n  .ngui-auto-complete {\n    background-color: transparent;\n  }\n  .ngui-auto-complete > input {\n    outline: none;\n    border: 0;\n    padding: 2px; \n    box-sizing: border-box;\n    background-clip: content-box;\n  }\n\n  .ngui-auto-complete > ul {\n    background-color: #fff;\n    margin: 0;\n    width : 100%;\n    overflow-y: auto;\n    list-style-type: none;\n    padding: 0;\n    border: 1px solid #ccc;\n    box-sizing: border-box;\n    animation: slideDown 0.1s;\n  }\n  .ngui-auto-complete > ul.empty {\n    display: none;\n  }\n\n  .ngui-auto-complete > ul li {\n    padding: 2px 5px;\n    border-bottom: 1px solid #eee;\n  }\n\n  .ngui-auto-complete > ul li.selected {\n    background-color: #ccc;\n  }\n\n  .ngui-auto-complete > ul li:last-child {\n    border-bottom: none;\n  }\n\n  .ngui-auto-complete > ul li:hover {\n    background-color: #ccc;\n  }"
+                    styles: ["\n  @keyframes slideDown {\n    0% {\n      transform:  translateY(-10px);\n    }\n    100% {\n      transform: translateY(0px);\n    }\n  }\n  .ngui-auto-complete {\n    background-color: transparent;\n  }\n  .ngui-auto-complete > input {\n    outline: none;\n    border: 0;\n    padding: 2px;\n    box-sizing: border-box;\n    background-clip: content-box;\n  }\n\n  .ngui-auto-complete > ul {\n    background-color: #fff;\n    margin: 0;\n    width : 100%;\n    overflow-y: auto;\n    list-style-type: none;\n    padding: 0;\n    border: 1px solid #ccc;\n    box-sizing: border-box;\n    animation: slideDown 0.1s;\n  }\n  .ngui-auto-complete > ul.empty {\n    display: none;\n  }\n\n  .ngui-auto-complete > ul li {\n    padding: 2px 5px;\n    border-bottom: 1px solid #eee;\n  }\n\n  .ngui-auto-complete > ul li.selected {\n    background-color: #ccc;\n  }\n\n  .ngui-auto-complete > ul li:last-child {\n    border-bottom: none;\n  }\n\n  .ngui-auto-complete > ul li:hover {\n    background-color: #ccc;\n  }"
                     ],
                     encapsulation: core_1.ViewEncapsulation.None
                 },] },
@@ -233,6 +246,7 @@ var NguiAutoCompleteComponent = (function () {
         'acceptUserInput': [{ type: core_1.Input, args: ["accept-user-input",] },],
         'loadingText': [{ type: core_1.Input, args: ["loading-text",] },],
         'loadingTemplate': [{ type: core_1.Input, args: ["loading-template",] },],
+        'closeToBottom': [{ type: core_1.Input, args: ["close-to-bottom",] },],
         'maxNumList': [{ type: core_1.Input, args: ["max-num-list",] },],
         'showInputTag': [{ type: core_1.Input, args: ["show-input-tag",] },],
         'showDropdownOnInit': [{ type: core_1.Input, args: ["show-dropdown-on-init",] },],

@@ -40,6 +40,7 @@ var NguiAutoCompleteDirective = (function () {
             var component = _this.componentRef.instance;
             component.keyword = _this.inputEl.value;
             component.showInputTag = false; //Do NOT display autocomplete input tag separately
+            component.closeToBottom = _this.isCloseToBottom();
             component.pathToData = _this.pathToData;
             component.minChars = _this.minChars;
             component.source = _this.source;
@@ -91,13 +92,17 @@ var NguiAutoCompleteDirective = (function () {
             _this.dropdownJustHidden = true;
             setTimeout(function () { return _this.dropdownJustHidden = false; }, 100);
         };
+        this.isCloseToBottom = function () {
+            var thisInputElBCR = _this.inputEl.getBoundingClientRect();
+            return thisInputElBCR.bottom + 100 > window.innerHeight;
+        };
         this.styleAutoCompleteDropdown = function () {
             if (_this.componentRef) {
                 var component = _this.componentRef.instance;
                 /* setting width/height auto complete */
                 var thisElBCR = _this.el.getBoundingClientRect();
                 var thisInputElBCR = _this.inputEl.getBoundingClientRect();
-                var closeToBottom = thisInputElBCR.bottom + 100 > window.innerHeight;
+                var closeToBottom = _this.isCloseToBottom();
                 var directionOfStyle = _this.isRtl ? 'right' : 'left';
                 _this.acDropdownEl.style.width = thisInputElBCR.width + "px";
                 _this.acDropdownEl.style.position = "absolute";
@@ -209,7 +214,7 @@ var NguiAutoCompleteDirective = (function () {
             this.selectNewValue(this.ngModel);
         }
         else if (!!this.formControl && this.formControl.value) {
-            this.selectNewValue(this.formControl.value[this.displayPropertyName]);
+            this.selectNewValue(this.formControl.value);
         }
     };
     NguiAutoCompleteDirective.prototype.ngAfterViewInit = function () {

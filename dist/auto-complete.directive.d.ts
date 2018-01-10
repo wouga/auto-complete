@@ -56,6 +56,7 @@ export declare class NguiAutoCompleteDirective implements OnInit, OnChanges {
     showAutoCompleteDropdown: (event?: any) => void;
     blurHandler(event: any): void;
     hideAutoCompleteDropdown: (event?: any) => void;
+    isCloseToBottom: () => boolean;
     styleAutoCompleteDropdown: () => void;
     setToStringFunction(item: any): any;
     selectNewValue: (item: any) => void;
