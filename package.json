@@ -1,6 +1,6 @@
 {
   "name": "wouga-auto-complete",
-  "version": "0.16.5",
+  "version": "0.16.6",
   "description": "Angular Input Autocomplete",
   "license": "MIT",
   "main": "dist/auto-complete.umd.js",
@@ -14,7 +14,7 @@
     "build:ngc": "ngc -p tsconfig.ngc.json",
     "build:umd": "cross-env NODE_ENV=prod webpack",
     "build:app": "cross-env NODE_ENV=prod webpack --config app/webpack.config",
-    "build-and-publish": "npm run build && npm version patch && npm publish --access=public"
+    "build-and-publish": "npm run build && npm version patch && npm publish"
   },
   "dependencies": {
     "@ngui/utils": "^0.8.0"

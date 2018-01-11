@@ -28,7 +28,7 @@ import { NguiAutoComplete } from "./auto-complete";
       <li *ngIf="isLoading && !loadingTemplate" class="loading">{{loadingText}}</li>
       <li *ngIf="minCharsEntered && !isLoading && !filteredList.length"
            (mousedown)="selectOne('')"
-           class="no-match-found">{{noMatchFoundText || 'No Result Found'}}</li>
+           class="no-match-found" [innerHTML]="noMatchFoundText || 'No Result Found'"></li>
       <li *ngIf="blankOptionText && filteredList.length"
           (mousedown)="selectOne('')"
           class="blank-item">{{blankOptionText}}</li>
